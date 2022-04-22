@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { createAdmin, editAdminAvatar, uploadAdminFile } from '../services/admin';
+import { createAdmin, uploadAdminFile } from '../services/admin';
 import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
-import { IUpdateAdminAvatar } from "../models/Admin";
 
 async function signUp(req: Request, res: Response) {
   let message = '';

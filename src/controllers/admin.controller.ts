@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
 import { createAdmin, uploadAdminFile } from '../services/admin';
 import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
+import { deleteFile } from '../utils/fileUtils';
 
 async function signUp(req: Request, res: Response) {
   let message = '';
-  let result = 1;
+  let resultCode = 1;
 
   const adminId = await createAdmin(req.body);
   const { file } = req;
 
   if (adminId === 0) {
     message = '회원가입 실패';
-    result = 0;
+    resultCode = 0;
   } else {
     if (!!file) {
       const adminFile: ICreateAdminFileStorage = {
@@ -26,13 +27,13 @@ async function signUp(req: Request, res: Response) {
 
       if (!isOk) {
         message = 'Avatar upload 실패';
-        // 파일 삭제해주기~~~~~*********
+        deleteFile(req.file.path);
       }
     }
   }
 
   res.send({
-    result,
+    resultCode,
     message
   })
 }

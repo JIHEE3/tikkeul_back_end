@@ -5,6 +5,13 @@ import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
 import { USER_STATUS } from '../models/UserStatus';
 import db from '../loaders/connectDB';
 import crypto from "crypto";
+import {
+  idPatternIsOk,
+  pwPatternIsOk,
+  userNamePatternIsOk,
+  birthDatePatternIsOk,
+  emailIsOk
+} from '../utils/validate';
 
 async function getAdminById(id: string): Promise<IAdmin> {
   const user = await admin.getAdminById(id);
@@ -13,23 +20,33 @@ async function getAdminById(id: string): Promise<IAdmin> {
 }
 
 async function createAdmin(adminUser: IAdmin): Promise<number> {
+  let adminId = 0;
 
-  const saltBuf = crypto.randomBytes(64);
-  const salt = saltBuf.toString("base64");
+  if (idPatternIsOk(adminUser.id)
+    && pwPatternIsOk(adminUser.password)
+    && userNamePatternIsOk(adminUser.firstName)
+    && userNamePatternIsOk(adminUser.lastName)
+    && birthDatePatternIsOk(adminUser.birthDate)
+    && emailIsOk(adminUser.email)
+  ) {
+    const saltBuf = crypto.randomBytes(64);
+    const salt = saltBuf.toString("base64");
 
-  const hashPasswordBuf = crypto.pbkdf2Sync(
-    adminUser.password,
-    salt,
-    100000,
-    64,
-    "sha512"
-  );
-  const hashPassword = hashPasswordBuf.toString("base64");
-  adminUser.password = hashPassword;
-  adminUser.salt = salt;
-  adminUser.status = USER_STATUS.member;
+    const hashPasswordBuf = crypto.pbkdf2Sync(
+      adminUser.password,
+      salt,
+      100000,
+      64,
+      "sha512"
+    );
+    const hashPassword = hashPasswordBuf.toString("base64");
+    adminUser.password = hashPassword;
+    adminUser.salt = salt;
+    adminUser.status = USER_STATUS.member;
 
-  const adminId = await admin.createAdmin(adminUser);
+    adminId = await admin.createAdmin(adminUser);
+  }
+
 
   return adminId;
 }

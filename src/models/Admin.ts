@@ -1,5 +1,5 @@
 export interface IAdmin {
-  adminId: number;
+  readonly adminId: number;
   id: string;
   password: string;
   salt: string;
@@ -17,7 +17,7 @@ export interface IAdmin {
 }
 
 export interface IUpdateAdminAvatar {
-  adminId: number;
+  readonly adminId: number;
   avatar: number;
   modifier: number;
 }

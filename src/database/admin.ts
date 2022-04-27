@@ -10,7 +10,7 @@ async function getAdminById(id: string): Promise<IAdmin> {
       SELECT 
         *
       FROM admin
-      WHERE admin_id = $1
+      WHERE id = $1
     `;
 
     const dbRes = await db.query(sql, [id]);
@@ -22,6 +22,7 @@ async function getAdminById(id: string): Promise<IAdmin> {
     }
   } catch (error) {
     console.log(error);
+    throw (error);
   }
 
   return admin;
@@ -104,6 +105,7 @@ async function createAdmin(adminUser: IAdmin): Promise<number> {
   } catch (error) {
     await db.query('ROLLBACK');
     console.error(error);
+    throw (error);
   }
 
 
@@ -153,6 +155,7 @@ async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> 
 
   } catch (error) {
     console.log(error);
+    throw (error);
   }
 
   return isOk;

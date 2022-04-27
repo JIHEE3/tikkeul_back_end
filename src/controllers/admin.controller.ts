@@ -1,7 +1,16 @@
 import { Request, Response } from "express";
-import { createAdmin, uploadAdminFile } from '../services/admin';
+import { getAdminById, createAdmin, uploadAdminFile } from '../services/admin';
 import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
 import { deleteFile } from '../utils/fileUtils';
+
+async function existId(req: Request, res: Response) {
+  const id: string = req.params.id;
+  const admin = await getAdminById(id);
+
+  res.send({
+    isExist: admin === null ? false : true
+  })
+}
 
 async function signUp(req: Request, res: Response) {
   let message = '';
@@ -39,5 +48,6 @@ async function signUp(req: Request, res: Response) {
 }
 
 export {
+  existId,
   signUp
 }

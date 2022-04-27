@@ -6,6 +6,12 @@ import { USER_STATUS } from '../models/UserStatus';
 import db from '../loaders/connectDB';
 import crypto from "crypto";
 
+async function getAdminById(id: string): Promise<IAdmin> {
+  const user = await admin.getAdminById(id);
+
+  return user;
+}
+
 async function createAdmin(adminUser: IAdmin): Promise<number> {
 
   const saltBuf = crypto.randomBytes(64);
@@ -62,6 +68,7 @@ async function uploadAdminFile(adminFIle: ICreateAdminFileStorage, adminId: numb
 
 
 export {
+  getAdminById,
   createAdmin,
   editAdminAvatar,
   uploadAdminFile

@@ -22,6 +22,7 @@ async function getUserById(id: string): Promise<IUser> {
     }
   } catch (error) {
     console.log(error);
+    throw (error);
   }
 
   return user;

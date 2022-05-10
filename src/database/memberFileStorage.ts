@@ -1,8 +1,8 @@
 import db from '../loaders/connectDB';
-import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
+import { ICreateMemberFileStorage } from '../models/MemberFileStorage';
 
-async function createAdminFIle(adminFIle: ICreateAdminFileStorage): Promise<number> {
-  let adminFileStorageId = 0;
+async function createMemberFIle(memberFIle: ICreateMemberFileStorage): Promise<number> {
+  let memberFileStorageId = 0;
 
   const {
     originalName,
@@ -10,11 +10,11 @@ async function createAdminFIle(adminFIle: ICreateAdminFileStorage): Promise<numb
     path,
     creator,
     modifier,
-  } = adminFIle;
+  } = memberFIle;
 
   try {
     const sql = `
-      INSERT INTO admin_file_storage (
+      INSERT INTO member_file_storage (
           original_name
         , name
         , path
@@ -48,16 +48,16 @@ async function createAdminFIle(adminFIle: ICreateAdminFileStorage): Promise<numb
     const { rowCount, rows } = dbRes;
 
     if (rowCount > 0) {
-      adminFileStorageId = rows[0].admin_file_storage_id;
+      memberFileStorageId = rows[0].member_file_storage_id;
     }
   } catch (error) {
     console.log(error);
     throw (error);
   }
 
-  return adminFileStorageId;
+  return memberFileStorageId;
 }
 
 export {
-  createAdminFIle
+  createMemberFIle
 }

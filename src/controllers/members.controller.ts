@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { getMemberById, createMember, } from '../services/member';
+import { getMemberById, createMember, signAndGetToken, } from '../services/member';
 import { ICreateMemberFileStorage } from '../models/MemberFileStorage';
 import { uploadMemberFile } from '../services/member';
 import { deleteFile } from '../utils/fileUtils';
 
-async function existId(req: Request, res: Response) {
+export async function existId(req: Request, res: Response) {
   const id: string = req.params.id;
   const member = await getMemberById(id);
 
@@ -13,7 +13,7 @@ async function existId(req: Request, res: Response) {
   })
 }
 
-async function signUp(req: Request, res: Response) {
+export async function signUp(req: Request, res: Response) {
   let message = '';
   let resultCode = 1;
 
@@ -49,7 +49,25 @@ async function signUp(req: Request, res: Response) {
   })
 }
 
-export {
-  existId,
-  signUp
+export async function signIn(req: Request, res: Response) {
+  let member = null;
+  const { id, password } = req.body;
+
+  const result = await signAndGetToken(id, password);
+
+  if (result.resultCode === 1) {
+    member = result.member;
+  }
+
+  res.send({
+    resultCode: result.resultCode,
+    message: result.message,
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+    profile: member !== null ? {
+      firstName: member.firstName,
+      lastName: member.lastName,
+      avatar: member.avatar
+    } : null
+  })
 }

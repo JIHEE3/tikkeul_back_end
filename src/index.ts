@@ -8,6 +8,7 @@ const app = express();
 
 app
   .use(cors())
+  .use(express.json())
   .use('/users', users)
   .use('/admin', admin);
 

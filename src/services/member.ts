@@ -11,16 +11,19 @@ import {
   birthDatePatternIsOk,
   emailIsOk
 } from '../utils/validate';
-import { encryptPassword } from '../utils/utils';
+import { encryptPassword, encryptPasswordBySalt } from '../utils/utils';
+import { makeMemberAccessToken, makeMemberRefreshToken } from '../utils/jwtUtils';
+import { SignInResult } from '../types/Types';
+import { addMemberRefreshToken } from '../redis/jwtRedis';
 
-async function getMemberById(id: string): Promise<IMember> {
+export async function getMemberById(id: string): Promise<IMember> {
   const member = await memberDB.getMemberById(id);
 
   return member;
 }
 
 
-async function createMember(member: IMember): Promise<number> {
+export async function createMember(member: IMember): Promise<number> {
   let memberId = 0;
 
   if (idPatternIsOk(member.id)
@@ -47,14 +50,15 @@ async function createMember(member: IMember): Promise<number> {
 }
 
 
-async function editMemberAvatar(user: IUpdateMemberAvatar): Promise<boolean> {
+export async function editMemberAvatar(user: IUpdateMemberAvatar): Promise<boolean> {
   const isOk = await memberDB.editMemberAvatar(user);
 
   return isOk;
 }
 
 
-async function uploadMemberFile(memberFIle: ICreateMemberFileStorage, memberId: number): Promise<boolean> {
+export async function uploadMemberFile(memberFIle: ICreateMemberFileStorage, memberId: number)
+  : Promise<boolean> {
   await db.query('BEGIN');
   const memberFileStorageId = await memberFileStorageDB.createMemberFIle(memberFIle);
   let isOk = false;
@@ -78,10 +82,47 @@ async function uploadMemberFile(memberFIle: ICreateMemberFileStorage, memberId: 
   return isOk;
 }
 
+export async function checkIdPassword(member: IMember, password: string)
+  : Promise<boolean> {
+  let isOk = false;
 
-export {
-  getMemberById,
-  createMember,
-  editMemberAvatar,
-  uploadMemberFile
+  if (member !== null) {
+    const hashPassword = encryptPasswordBySalt(password, member.salt);
+
+    if (member.password === hashPassword) {
+      isOk = true;
+    }
+  }
+
+  return isOk;
+}
+
+export async function signAndGetToken(id: string, password: string): Promise<SignInResult> {
+  let result: SignInResult = {
+    resultCode: 0,
+    message: '',
+    accessToken: '',
+    refreshToken: '',
+    member: null,
+  };
+
+  const member = await getMemberById(id);
+  if (await checkIdPassword(member, password)) {
+    try {
+      const accessToken = makeMemberAccessToken(member);
+      const refreshToken = makeMemberRefreshToken();
+      await addMemberRefreshToken(member.id, refreshToken);
+      result.resultCode = 1;
+      result.accessToken = accessToken;
+      result.refreshToken = refreshToken;
+      result.member = member;
+    } catch (error) {
+      result.message = error.message;
+    }
+  } else {
+    result.message = '아이디와 비밀번호를 다시 확인해 주세요.';
+  }
+
+  return result;
+
 }

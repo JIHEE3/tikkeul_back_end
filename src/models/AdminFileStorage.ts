@@ -3,7 +3,7 @@ export interface IAdminFileStorage {
   originalName: string;
   name: string;
   path: string;
-  isRemove: 0 | 1;
+  isRemoved: 0 | 1;
   creator: number;
   createdDate?: Date;
   modifier: number;

@@ -1,5 +1,5 @@
-export interface IAdminFileStorage {
-  adminFileStorageId: number;
+export interface IMemberFileStorage {
+  memberFileStorageId: number;
   originalName: string;
   name: string;
   path: string;
@@ -10,7 +10,7 @@ export interface IAdminFileStorage {
   modifiedDate: Date;
 }
 
-export interface ICreateAdminFileStorage {
+export interface ICreateMemberFileStorage {
   originalName: string;
   name: string;
   path: string;

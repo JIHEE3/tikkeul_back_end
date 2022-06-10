@@ -1,4 +1,5 @@
 import * as Types from '../types/Types';
+import crypto from "crypto";
 
 export function snakeCaseToCamelCase(input: string): string {
   return (
@@ -15,7 +16,6 @@ export function snakeCaseToCamelCase(input: string): string {
       ));
 }
 
-
 export function snakeObjToCamelObj(obj: Types.Data): Types.Data {
   const snakeKeys: string[] = Object.keys(obj);
   const camelKeys: string[] = snakeKeys.map((key: string): string => snakeCaseToCamelCase(key));
@@ -27,4 +27,35 @@ export function snakeObjToCamelObj(obj: Types.Data): Types.Data {
   }
 
   return result;
+}
+
+export function encryptPassword(password: string): Types.EncryptPassword {
+  const saltBuf = crypto.randomBytes(64);
+  const salt = saltBuf.toString("base64");
+
+  const hashPasswordBuf = crypto.pbkdf2Sync(
+    password,
+    salt,
+    100000,
+    64,
+    "sha512"
+  );
+
+  return {
+    salt,
+    password: hashPasswordBuf.toString("base64")
+  }
+}
+
+
+export function encryptPasswordBySalt(password: string, salt: string): string {
+  const hashPasswordBuf = crypto.pbkdf2Sync(
+    password,
+    salt,
+    100000,
+    64,
+    "sha512"
+  );
+
+  return hashPasswordBuf.toString("base64");
 }

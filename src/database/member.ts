@@ -1,15 +1,15 @@
 import db from '../loaders/connectDB';
-import { IAdmin, IUpdateAdminAvatar } from '../models/Admin';
+import { IMember, IUpdateMemberAvatar } from '../models/Member';
 import { snakeObjToCamelObj } from '../utils/utils';
 
-async function getAdminById(id: string): Promise<IAdmin> {
-  let admin: IAdmin = null;
+async function getMemberById(id: string): Promise<IMember> {
+  let memger: IMember = null;
 
   try {
     const sql = `
       SELECT 
         *
-      FROM admin
+      FROM member
       WHERE id = $1
     `;
 
@@ -18,18 +18,19 @@ async function getAdminById(id: string): Promise<IAdmin> {
 
     if (rowCount > 0) {
 
-      admin = snakeObjToCamelObj(rows[0]) as IAdmin;
+      memger = snakeObjToCamelObj(rows[0]) as IMember;
     }
   } catch (error) {
     console.log(error);
     throw (error);
   }
 
-  return admin;
+  return memger;
 }
 
-async function createAdmin(adminUser: IAdmin): Promise<number> {
-  let adminId = 0;
+
+async function createMember(member: IMember): Promise<number> {
+  let memberId = 0;
 
   const {
     id,
@@ -42,13 +43,13 @@ async function createAdmin(adminUser: IAdmin): Promise<number> {
     gender,
     phoneNumber,
     status,
-  } = adminUser;
+  } = member;
 
   try {
     await db.query('BEGIN');
 
     const sql = `
-      INSERT INTO admin (
+      INSERT INTO member (
           id
         , password
         , salt
@@ -96,11 +97,10 @@ async function createAdmin(adminUser: IAdmin): Promise<number> {
     const { rowCount, rows } = dbRes;
 
     if (rowCount > 0) {
-      adminId = rows[0].admin_id;
+      memberId = rows[0].member_id;
     }
 
     await db.query('COMMIT');
-
 
   } catch (error) {
     await db.query('ROLLBACK');
@@ -109,22 +109,22 @@ async function createAdmin(adminUser: IAdmin): Promise<number> {
   }
 
 
-  return adminId;
+  return memberId;
 }
 
 
-async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> {
+async function editMemberAvatar(member: IUpdateMemberAvatar): Promise<boolean> {
   let isOk = false;
 
   const {
-    adminId,
+    memberId,
     avatar,
     modifier,
-  } = adminUser;
+  } = member;
 
   try {
     const sql = `
-      UPDATE admin SET (
+      UPDATE member SET (
           avatar
         , modifier
         , modified_date
@@ -135,14 +135,14 @@ async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> 
         , $2
         , NOW()
       )
-      WHERE admin_id = $3
+      WHERE member_id = $3
       RETURNING *
   `;
 
     const values = [
       avatar,
       modifier,
-      adminId,
+      memberId,
     ];
 
     const dbRes = await db.query(sql, values);
@@ -162,8 +162,9 @@ async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> 
 }
 
 
+
 export {
-  getAdminById,
-  createAdmin,
-  editAdminAvatar
+  getMemberById,
+  createMember,
+  editMemberAvatar
 }

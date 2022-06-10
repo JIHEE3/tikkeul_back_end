@@ -1,5 +1,6 @@
-export interface IAdmin {
-  readonly adminId: number;
+export interface IMember {
+  [x: string]: any;
+  readonly memberId: number;
   id: string;
   password: string;
   salt: string;
@@ -16,8 +17,8 @@ export interface IAdmin {
   modifier: number;
 }
 
-export interface IUpdateAdminAvatar {
-  readonly adminId: number;
+export interface IUpdateMemberAvatar {
+  readonly memberId: number;
   avatar: number;
   modifier: number;
 }

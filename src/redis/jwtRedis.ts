@@ -1,4 +1,4 @@
-import redisClient from './tikkeulRedis';
+import redisClient from 'src/redis/tikkeulRedis';
 
 
 export async function addMemberRefreshToken(userId: string, refreshToken: string) {

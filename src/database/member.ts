@@ -1,6 +1,6 @@
-import db from '../loaders/connectDB';
-import { IMember, IUpdateMemberAvatar } from '../models/Member';
-import { snakeObjToCamelObj } from '../utils/utils';
+import db from 'src/loaders/connectDB';
+import { IMember, IUpdateMemberAvatar } from 'src/models/Member';
+import { snakeObjToCamelObj } from 'src/utils/utils';
 
 async function getMemberById(id: string): Promise<IMember> {
   let memger: IMember = null;

@@ -1,20 +1,20 @@
-import * as adminDB from '../database/admin';
-import * as adminFileStorageDB from '../database/adminFileStorage';
-import { IAdmin, IUpdateAdminAvatar } from '../models/Admin';
-import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
-import { USER_STATUS } from '../models/UserStatus';
-import db from '../loaders/connectDB';
+import * as adminDB from 'src/database/admin';
+import * as adminFileStorageDB from 'src/database/adminFileStorage';
+import { IAdmin, IUpdateAdminAvatar } from 'src/models/Admin';
+import { ICreateAdminFileStorage } from 'src/models/AdminFileStorage';
+import { USER_STATUS } from 'src/models/UserStatus';
+import db from 'src/loaders/connectDB';
 import {
   idPatternIsOk,
   pwPatternIsOk,
   userNamePatternIsOk,
   birthDatePatternIsOk,
   emailIsOk
-} from '../utils/validate';
-import { SignInResult } from '../types/Types';
-import { encryptPassword, encryptPasswordBySalt } from '../utils/utils';
-import { makeAdminAccessToken, makeRefreshToken } from '../utils/jwtUtils';
-import { addAdminRefreshToken } from '../redis/jwtRedis';
+} from 'src/utils/validate';
+import { SignInResult } from 'src/types/Types';
+import { encryptPassword, encryptPasswordBySalt } from 'src/utils/utils';
+import { makeAdminAccessToken, makeRefreshToken } from 'src/utils/jwtUtils';
+import { addAdminRefreshToken } from 'src/redis/jwtRedis';
 
 
 export async function getAdminById(id: string): Promise<IAdmin> {

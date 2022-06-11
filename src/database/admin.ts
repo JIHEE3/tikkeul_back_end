@@ -1,6 +1,6 @@
-import db from '../loaders/connectDB';
-import { IAdmin, IUpdateAdminAvatar } from '../models/Admin';
-import { snakeObjToCamelObj } from '../utils/utils';
+import db from 'src/loaders/connectDB';
+import { IAdmin, IUpdateAdminAvatar } from 'src/models/Admin';
+import { snakeObjToCamelObj } from 'src/utils/utils';
 
 async function getAdminById(id: string): Promise<IAdmin> {
   let admin: IAdmin = null;

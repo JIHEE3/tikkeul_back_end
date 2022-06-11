@@ -9,7 +9,7 @@
     "sourceMap": true,
     "downlevelIteration": true,
     "noImplicitAny": true,
-    "paths": { "*": ["node_modules/*"] }
+    "paths": { "*": ["node_modules/*"], "src/*": ["src/*"] }
   },
   "include": ["src/**/*"]
 }

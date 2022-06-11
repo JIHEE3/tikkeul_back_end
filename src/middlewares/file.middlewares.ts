@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 
-import config from '../config';
+import config from 'src/config';
 
 export const avatarStorage = multer.diskStorage({
   destination: (req, file, cb) => {

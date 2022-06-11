@@ -1,5 +1,5 @@
-import { IAdmin } from "../models/Admin";
-import { IMember } from "../models/Member";
+import { IAdmin } from "src/models/Admin";
+import { IMember } from "src/models/Member";
 
 export type Data = {
   [key: string]: any;

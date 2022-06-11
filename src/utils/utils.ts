@@ -1,4 +1,4 @@
-import * as Types from '../types/Types';
+import * as Types from 'src/types/Types';
 import crypto from "crypto";
 
 export function snakeCaseToCamelCase(input: string): string {

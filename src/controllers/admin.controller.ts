@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { getAdminById, createAdmin, uploadAdminFile, signAndGetToken } from '../services/admin';
-import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
-import { deleteFile } from '../utils/fileUtils';
+import { getAdminById, createAdmin, uploadAdminFile, signAndGetToken } from 'src/services/admin';
+import { ICreateAdminFileStorage } from 'src/models/AdminFileStorage';
+import { deleteFile } from 'src/utils/fileUtils';
 
 export async function existId(req: Request, res: Response) {
   const id: string = req.params.id;

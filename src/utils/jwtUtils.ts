@@ -1,6 +1,6 @@
-import config from '../config';
-import { IMember } from '../models/Member';
-import { IAdmin } from '../models/Admin';
+import config from 'src/config';
+import { IMember } from 'src/models/Member';
+import { IAdmin } from 'src/models/Admin';
 import jwt from "jsonwebtoken";
 
 export function makeMemberAccessToken(member: IMember): string {

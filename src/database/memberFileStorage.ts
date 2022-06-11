@@ -1,5 +1,5 @@
-import db from '../loaders/connectDB';
-import { ICreateMemberFileStorage } from '../models/MemberFileStorage';
+import db from 'src/loaders/connectDB';
+import { ICreateMemberFileStorage } from 'src/models/MemberFileStorage';
 
 async function createMemberFIle(memberFIle: ICreateMemberFileStorage): Promise<number> {
   let memberFileStorageId = 0;

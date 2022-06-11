@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import config from './config';
-import users from './routes/users.routs';
-import admin from './routes/admin.routs';
+import config from 'src/config';
+import users from 'src/routes/users.routs';
+import admin from 'src/routes/admin.routs';
 
 const app = express();
 

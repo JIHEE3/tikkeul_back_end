@@ -1,5 +1,5 @@
-import db from '../loaders/connectDB';
-import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
+import db from 'src/loaders/connectDB';
+import { ICreateAdminFileStorage } from 'src/models/AdminFileStorage';
 
 async function createAdminFIle(adminFIle: ICreateAdminFileStorage): Promise<number> {
   let adminFileStorageId = 0;

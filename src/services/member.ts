@@ -1,20 +1,20 @@
-import * as memberDB from '../database/member';
-import * as memberFileStorageDB from '../database/memberFileStorage';
-import { IMember, IUpdateMemberAvatar } from '../models/Member';
-import { ICreateMemberFileStorage } from '../models/MemberFileStorage';
-import { USER_STATUS } from '../models/UserStatus';
-import db from '../loaders/connectDB';
+import * as memberDB from 'src/database/member';
+import * as memberFileStorageDB from 'src/database/memberFileStorage';
+import { IMember, IUpdateMemberAvatar } from 'src/models/Member';
+import { ICreateMemberFileStorage } from 'src/models/MemberFileStorage';
+import { USER_STATUS } from 'src/models/UserStatus';
+import db from 'src/loaders/connectDB';
 import {
   idPatternIsOk,
   pwPatternIsOk,
   userNamePatternIsOk,
   birthDatePatternIsOk,
   emailIsOk
-} from '../utils/validate';
-import { encryptPassword, encryptPasswordBySalt } from '../utils/utils';
-import { makeMemberAccessToken, makeRefreshToken } from '../utils/jwtUtils';
-import { SignInResult } from '../types/Types';
-import { addMemberRefreshToken } from '../redis/jwtRedis';
+} from 'src/utils/validate';
+import { encryptPassword, encryptPasswordBySalt } from 'src/utils/utils';
+import { makeMemberAccessToken, makeRefreshToken } from 'src/utils/jwtUtils';
+import { SignInResult } from 'src/types/Types';
+import { addMemberRefreshToken } from 'src/redis/jwtRedis';
 
 export async function getMemberById(id: string): Promise<IMember> {
   const member = await memberDB.getMemberById(id);

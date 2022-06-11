@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { getMemberById, createMember, signAndGetToken, } from '../services/member';
-import { ICreateMemberFileStorage } from '../models/MemberFileStorage';
-import { uploadMemberFile } from '../services/member';
-import { deleteFile } from '../utils/fileUtils';
+import { getMemberById, createMember, signAndGetToken, } from 'src/services/member';
+import { ICreateMemberFileStorage } from 'src/models/MemberFileStorage';
+import { uploadMemberFile } from 'src/services/member';
+import { deleteFile } from 'src/utils/fileUtils';
 
 export async function existId(req: Request, res: Response) {
   const id: string = req.params.id;

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { getAdminById, createAdmin, uploadAdminFile } from '../services/admin';
+import { getAdminById, createAdmin, uploadAdminFile, signAndGetToken } from '../services/admin';
 import { ICreateAdminFileStorage } from '../models/AdminFileStorage';
 import { deleteFile } from '../utils/fileUtils';
 
-async function existId(req: Request, res: Response) {
+export async function existId(req: Request, res: Response) {
   const id: string = req.params.id;
   const admin = await getAdminById(id);
 
@@ -12,7 +12,7 @@ async function existId(req: Request, res: Response) {
   })
 }
 
-async function signUp(req: Request, res: Response) {
+export async function signUp(req: Request, res: Response) {
   let message = '';
   let resultCode = 1;
 
@@ -47,7 +47,26 @@ async function signUp(req: Request, res: Response) {
   })
 }
 
-export {
-  existId,
-  signUp
+
+export async function signIn(req: Request, res: Response) {
+  let member = null;
+  const { id, password } = req.body;
+
+  const result = await signAndGetToken(id, password);
+
+  if (result.resultCode === 1) {
+    member = result.member;
+  }
+
+  res.send({
+    resultCode: result.resultCode,
+    message: result.message,
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+    profile: member !== null ? {
+      firstName: member.firstName,
+      lastName: member.lastName,
+      avatar: member.avatar
+    } : null
+  })
 }

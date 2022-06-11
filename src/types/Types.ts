@@ -1,3 +1,4 @@
+import { IAdmin } from "../models/Admin";
 import { IMember } from "../models/Member";
 
 export type Data = {
@@ -14,5 +15,5 @@ export type SignInResult = {
   message: string
   accessToken: string
   refreshToken: string
-  member: IMember
+  member: IMember | IAdmin
 }

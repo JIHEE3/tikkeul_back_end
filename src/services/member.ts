@@ -12,7 +12,7 @@ import {
   emailIsOk
 } from '../utils/validate';
 import { encryptPassword, encryptPasswordBySalt } from '../utils/utils';
-import { makeMemberAccessToken, makeMemberRefreshToken } from '../utils/jwtUtils';
+import { makeMemberAccessToken, makeRefreshToken } from '../utils/jwtUtils';
 import { SignInResult } from '../types/Types';
 import { addMemberRefreshToken } from '../redis/jwtRedis';
 
@@ -21,7 +21,6 @@ export async function getMemberById(id: string): Promise<IMember> {
 
   return member;
 }
-
 
 export async function createMember(member: IMember): Promise<number> {
   let memberId = 0;
@@ -49,13 +48,11 @@ export async function createMember(member: IMember): Promise<number> {
   return memberId;
 }
 
-
 export async function editMemberAvatar(user: IUpdateMemberAvatar): Promise<boolean> {
   const isOk = await memberDB.editMemberAvatar(user);
 
   return isOk;
 }
-
 
 export async function uploadMemberFile(memberFIle: ICreateMemberFileStorage, memberId: number)
   : Promise<boolean> {
@@ -110,7 +107,7 @@ export async function signAndGetToken(id: string, password: string): Promise<Sig
   if (await checkIdPassword(member, password)) {
     try {
       const accessToken = makeMemberAccessToken(member);
-      const refreshToken = makeMemberRefreshToken();
+      const refreshToken = makeRefreshToken();
       await addMemberRefreshToken(member.id, refreshToken);
       result.resultCode = 1;
       result.accessToken = accessToken;

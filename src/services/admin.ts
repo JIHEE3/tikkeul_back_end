@@ -11,16 +11,19 @@ import {
   birthDatePatternIsOk,
   emailIsOk
 } from '../utils/validate';
-import { encryptPassword } from '../utils/utils';
+import { SignInResult } from '../types/Types';
+import { encryptPassword, encryptPasswordBySalt } from '../utils/utils';
+import { makeAdminAccessToken, makeRefreshToken } from '../utils/jwtUtils';
+import { addAdminRefreshToken } from '../redis/jwtRedis';
 
 
-async function getAdminById(id: string): Promise<IAdmin> {
+export async function getAdminById(id: string): Promise<IAdmin> {
   const user = await adminDB.getAdminById(id);
 
   return user;
 }
 
-async function createAdmin(adminUser: IAdmin): Promise<number> {
+export async function createAdmin(adminUser: IAdmin): Promise<number> {
   let adminId = 0;
 
   if (idPatternIsOk(adminUser.id)
@@ -46,14 +49,14 @@ async function createAdmin(adminUser: IAdmin): Promise<number> {
 }
 
 
-async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> {
+export async function editAdminAvatar(adminUser: IUpdateAdminAvatar): Promise<boolean> {
   const isOk = await adminDB.editAdminAvatar(adminUser);
 
   return isOk;
 }
 
 
-async function uploadAdminFile(adminFIle: ICreateAdminFileStorage, adminId: number): Promise<boolean> {
+export async function uploadAdminFile(adminFIle: ICreateAdminFileStorage, adminId: number): Promise<boolean> {
   await db.query('BEGIN');
   const adminFileStorageId = await adminFileStorageDB.createAdminFIle(adminFIle);
   let isOk = false;
@@ -77,10 +80,47 @@ async function uploadAdminFile(adminFIle: ICreateAdminFileStorage, adminId: numb
   return isOk;
 }
 
+export async function checkIdPassword(adminUser: IAdmin, password: string)
+  : Promise<boolean> {
+  let isOk = false;
 
-export {
-  getAdminById,
-  createAdmin,
-  editAdminAvatar,
-  uploadAdminFile
+  if (adminUser !== null) {
+    const hashPassword = encryptPasswordBySalt(password, adminUser.salt);
+
+    if (adminUser.password === hashPassword) {
+      isOk = true;
+    }
+  }
+
+  return isOk;
+}
+
+export async function signAndGetToken(id: string, password: string): Promise<SignInResult> {
+  let result: SignInResult = {
+    resultCode: 0,
+    message: '',
+    accessToken: '',
+    refreshToken: '',
+    member: null,
+  };
+
+  const member = await getAdminById(id);
+  if (await checkIdPassword(member, password)) {
+    try {
+      const accessToken = makeAdminAccessToken(member);
+      const refreshToken = makeRefreshToken();
+      await addAdminRefreshToken(member.id, refreshToken);
+      result.resultCode = 1;
+      result.accessToken = accessToken;
+      result.refreshToken = refreshToken;
+      result.member = member;
+    } catch (error) {
+      result.message = error.message;
+    }
+  } else {
+    result.message = '아이디와 비밀번호를 다시 확인해 주세요.';
+  }
+
+  return result;
+
 }

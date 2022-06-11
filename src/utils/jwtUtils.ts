@@ -20,7 +20,7 @@ export function makeMemberAccessToken(member: IMember): string {
   );
 }
 
-export function makeMemberRefreshToken(): string {
+export function makeRefreshToken(): string {
   return jwt.sign(
     {
     },
@@ -31,4 +31,20 @@ export function makeMemberRefreshToken(): string {
   );
 }
 
+export function makeAdminAccessToken(adminUser: IAdmin): string {
+  return jwt.sign(
+    {
+      memberId: adminUser.adminId,
+      id: adminUser.id,
+      firstName: adminUser.firstName,
+      lastName: adminUser.lastName,
+    },
+    config.secretKey,
+    {
+      expiresIn: "1h",
+      // issuer: ''
+      subject: "userInfo",
+    }
+  );
+}
 
